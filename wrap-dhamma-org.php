@@ -30,7 +30,9 @@ function wrap_dhamma( $page, $lang = null ) {
 		case 'dscode':
 		case 'osguide':
 		case 'privacy':
+			// JJD 3/12/23 bypass cloudflare - does not allow curl
 			$url = 'https://www.dhamma.org/' . $lang . '/' . $page . "?raw";
+			//$url = 'https://portal-prod.dhamma.org/' . $lang . '/' . $page . "?raw"; // works from web browser but not curl()
 			$text_to_output = pull_page( $url, $lang );
 			break;
 
@@ -53,8 +55,24 @@ function wrap_dhamma( $page, $lang = null ) {
 	// we're done
 }
 
+// JJD 5/15/22
+function url_get_contents ($Url) {
+    if (!function_exists('curl_init')){ 
+        die('CURL is not installed!');
+    }
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $Url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	//curl_setopt($ch, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2); // JJD 3/12/23
+    $output = curl_exec($ch);
+    curl_close($ch);
+    return $output;
+}
+
 function pull_page ( $url, $lang ) {
-    $raw = file_get_contents ( $url );
+    // JJD 5/15/22
+    //$raw = file_get_contents ( $url );
+    $raw = url_get_contents($url);
     if ($raw === false) {
        echo "Error retrieving content.";
     }
@@ -63,7 +81,8 @@ function pull_page ( $url, $lang ) {
 }
 
 function pull_video_page ( $url ) {
-	$raw = file_get_contents ( $url );
+	//$raw = file_get_contents ( $url );
+	$raw = url_get_contents ( $url );
 	$raw = getBodyContent ( $raw );
 	$raw = stripH1 ( $raw );
 	$raw = stripHR ( $raw );
