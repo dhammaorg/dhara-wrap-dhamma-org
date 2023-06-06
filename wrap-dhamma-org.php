@@ -18,8 +18,10 @@
   You should have received a copy of the GNU General Public License
   along with this program.  If not, see <https://www.gnu.org/licenses/>
  */
+add_shortcode( 'wrap-dhamma', 'wrap_dhamma');
 
-function wrap_dhamma($page, $lang = null) {
+function wrap_dhamma($atts) {
+    $page = ($atts["page"]);
     $lang = isset($lang) ? $lang : substr(get_bloginfo('language'), 0, 2);
     // validate page
     switch ($page) {
