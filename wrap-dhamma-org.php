@@ -51,6 +51,7 @@ function wrap_dhamma($atts) {
     // emit the required comment
     echo '<!-- ' . $url . ' has been dynamically reformatted on ' . date("D M  j G:i s Y T") . '. -->';
 
+    $text_to_output = fixURLs($text_to_output);
     // emit the reformatted page
     echo $text_to_output;
 
@@ -100,7 +101,7 @@ function pull_video_page($url) {
     return $raw;
 }
 
-function fixURLs($raw, $lang) {
+function fixURLs($raw) {
     $LOCAL_URLS = [
         'art' => '/about/art-of-living/',
         'goenka' => '/about/goenka/',
