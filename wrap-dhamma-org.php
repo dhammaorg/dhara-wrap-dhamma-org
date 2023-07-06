@@ -39,11 +39,6 @@ function wrap_dhamma($atts) {
             $text_to_output = pull_page($url, $lang);
             break;
 
-        case 'video':
-            $url = 'https://video.server.dhamma.org/video/';
-            $text_to_output = pull_video_page($url);
-            break;
-
         default:
             die("invalid page '" . $page . "'");
     }
@@ -84,20 +79,6 @@ function pull_page($url, $lang) {
         echo "Error retrieving content.";
     }
     $raw = stripH1($raw);
-    return $raw;
-}
-
-function pull_video_page($url) {
-    //$raw = file_get_contents ( $url );
-    $raw = url_get_contents($url);
-    $raw = getBodyContent($raw);
-    $raw = stripH1($raw);
-    $raw = stripHR($raw);
-    $raw = stripTableTags($raw);
-    $raw = stripExessVideoLineBreaks($raw);
-    $raw = fixVideoURLS($raw);
-    $raw = fixBlueBallImages($raw);
-    $raw = stripHomeLink($raw);
     return $raw;
 }
 
