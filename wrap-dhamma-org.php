@@ -69,11 +69,16 @@ function url_get_contents($Url) {
 
 function pull_page($url, $lang) {
     // JJD 3/17/23 two options in case server does not allow_url_fopen
-    $allow_fopen = ini_get('allow_url_fopen');
-    if ($allow_fopen) {
-        $raw = file_get_contents($url);
-    } else {
-        $raw = url_get_contents($url);
+    // JJD 8/18/23 #6 catch errors if www.dhamma.org is unavailable
+    try {
+        $allow_fopen = ini_get('allow_url_fopen');
+        if ($allow_fopen) {
+            $raw = file_get_contents($url);
+        } else {
+            $raw = url_get_contents($url);
+        }
+    } catch (Exception $e) {
+        $raw = false;
     }
     if ($raw === false) {
         echo "Error retrieving content.";
